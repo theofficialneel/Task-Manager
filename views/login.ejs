@@ -9,6 +9,15 @@
 <body>
 	<%- include header.ejs %>
 	<h1 class="text-center">Login</h1>
+	<div class="container">
+	<div class="row">
+		<div class="col-sm-6 offset-sm-3">
+		<% if(success_msg != "") { %>
+			<div class="alert alert-success text-center"><%= success_msg %></div>
+		<% } %>
+		</div>
+	</div>
+	</div>
 	<%- include footer.ejs %>
 </body>
 </html>
