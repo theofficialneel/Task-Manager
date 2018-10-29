@@ -1,6 +1,10 @@
 body{
 	background-color: #111 !important;
-	color: #fff !important;
+ 	color: white !important;
+}
+.topbar{
+	background: #000;
+	margin-bottom: 30px !important;
 }
 .footer{
 	position: fixed;
