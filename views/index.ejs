@@ -2,8 +2,13 @@
 <html>
 <head>
 	<title>Login</title>
+	<link rel="shortcut icon" href="/images/sampleimg.png" />
+	<link rel="stylesheet" type="text/css" href="/stylesheets/style.css">
+	<link rel="stylesheet" type="text/css" href="/stylesheets/bootstrap.min.css">
 </head>
 <body>
-	<h1>Welcome to <%= title %></h1>
+	<%- include header.ejs %>
+	<h1 class="text-center">Welcome to <%= title %></h1>
+	<%- include footer.ejs %>
 </body>
 </html>
