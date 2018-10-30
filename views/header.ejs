@@ -1,11 +1,32 @@
 <ul class="nav nav-pills justify-content-end topbar">
-	<li class="nav-item">
-		<a class="nav-link" href="/">Dashboard</a>
-	</li>
-	<li class="nav-item">
-		<a class="nav-link" href="/users/login">Login</a>
-	</li>
-	<li class="nav-item">
-		<a class="nav-link" href="/users/register">Register</a>
-	</li>
+	<% if (user) {%>
+		<li class="nav-item">
+			<a class="nav-link" href="/">Dashboard</a>
+		</li>
+		<li class="nav-item">
+			<a class="nav-link" href="/users/logout">Logout</a>
+		</li>
+	<% } else { %>
+		<li class="nav-item">
+			<a class="nav-link" href="/users/login">Login</a>
+		</li>
+		<li class="nav-item">
+			<a class="nav-link" href="/users/register">Register</a>
+		</li>
+	<% } %>
 </ul>
+<div class="container">
+	<div class="row">
+		<div class="col-sm-6 offset-sm-3">
+			<% if(success_msg != "") { %>
+				<div class="alert alert-success text-center"><%= success_msg %></div>
+			<% } %>
+			<% if(error_msg != "") { %>
+				<div class="alert alert-danger text-center"><%= error_msg %></div>
+			<% } %>
+			<% if(error != "") { %>
+				<div class="alert alert-danger text-center"><%= error %></div>
+			<% } %>
+		</div>
+	</div>
+</div>
