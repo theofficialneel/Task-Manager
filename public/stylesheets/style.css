@@ -1,17 +1,48 @@
 body{
-	background-color: #111 !important;
+	background-color: rgb(32, 32, 32);
+  	background-image: linear-gradient(45deg, black 25%, transparent 25%, transparent 75%, black 75%, black), linear-gradient(45deg, black 25%, transparent 25%, transparent 75%, black 75%, black), linear-gradient(to bottom, rgb(8, 8, 8), rgb(32, 32, 32));
+  	background-size: 10px 10px, 10px 10px, 10px 5px;
+  	background-position: 0px 0px, 5px 5px, 0px 0px;
  	color: white !important;
 }
-.topbar{
-	background: #000;
-	margin-bottom: 30px !important;
+.createtask i{
+	font-size: 60px;
+	cursor: pointer;
+}
+.createtask div{
+	font-size: 20px;
+	font-weight: lighter;
+	margin-bottom: 40px;
+	padding: 0;
+}
+#createTaskModal div{
+	color: black;
+	border-radius: 15px;
+	background: #ccc;
 }
 .card{
-    color: #101010;
+    color: #ddd;
+    background-color: #333 !important;
+    font-family: 'Fredoka One', cursive;
+    border-radius: 20px !important;
 }
 .footer{
 	position: fixed;
     left: 0;
     bottom: 0;
     width: 100%;
+    z-index: -999;
+}
+.taskmanager{
+	font-family: 'Fredoka One', cursive;
+	font-size: 30px !important;
+	color: #4cabce !important;
+}
+.userDetails{
+	margin-top: 50px;
+	font-size: 20px;
+	color: #aaa;
+}
+.useFredoka{
+	font-family: 'Fredoka One', cursive !important;
 }
