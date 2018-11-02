@@ -5,10 +5,17 @@
 	<link rel="shortcut icon" href="/images/sampleimg.png" />
 	<link rel="stylesheet" type="text/css" href="/stylesheets/style.css">
 	<link rel="stylesheet" type="text/css" href="/stylesheets/bootstrap.min.css">
+	<link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons">
+	<link href="https://fonts.googleapis.com/css?family=Fredoka+One" rel="stylesheet">
 </head>
 <body>
 	<%- include header.ejs %>
-	<h1 class="text-center">Welcome to <%= title %></h1>
+	<h2 class="text-center useFredoka">Welcome, <%= User.name %></h2>
+	<div class="text-center userDetails useFredoka">
+		<p>Name : <%= User.name %></p>
+		<p>Username : <%= User.username %></p>
+		<p>Email : <%= User.email %></p>
+	</div>
 	<%- include footer.ejs %>
 </body>
 </html>

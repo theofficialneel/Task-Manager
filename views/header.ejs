@@ -1,20 +1,32 @@
-<ul class="nav nav-pills justify-content-end topbar">
-	<% if (user) {%>
-		<li class="nav-item">
-			<a class="nav-link" href="/">Dashboard</a>
-		</li>
-		<li class="nav-item">
-			<a class="nav-link" href="/users/logout">Logout</a>
-		</li>
-	<% } else { %>
-		<li class="nav-item">
-			<a class="nav-link" href="/users/login">Login</a>
-		</li>
-		<li class="nav-item">
-			<a class="nav-link" href="/users/register">Register</a>
-		</li>
-	<% } %>
-</ul>
+<nav class="navbar navbar-expand-md navbar-dark bg-dark" style="margin-bottom:25px">
+  <a class="navbar-brand taskmanager" href="/"><i class="material-icons">assignment</i> Task Manager</a>
+  <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+    <span class="navbar-toggler-icon"></span>
+  </button>
+  <div class="collapse navbar-collapse justify-content-end useFredoka">
+    <ul class="nav navbar-nav navbar-right">
+      	<% if (user) {%>
+			<li class="nav-item">
+				<a class="nav-link" href="/">Dashboard</a>
+			</li>
+			<li class="nav-item">
+				<a class="nav-link" href="/tasks">Tasks</a>
+			</li>
+			<li class="nav-item">
+				<a class="nav-link" href="/users/logout"><i class="material-icons">exit_to_app</i></a>
+			</li>
+		<% } else { %>
+			<li class="nav-item">
+				<a class="nav-link" href="/users/login">Login</a>
+			</li>
+			<li class="nav-item">
+				<a class="nav-link" href="/users/register">Register</a>
+			</li>
+		<% } %>
+    </ul>
+  </div>
+</nav>
+
 <div class="container">
 	<div class="row">
 		<div class="col-sm-6 offset-sm-3">

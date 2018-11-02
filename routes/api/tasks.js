@@ -10,7 +10,7 @@ const User = require('../../models/users');
 //Routes
 router.get('/', (req, res, next) => {
     Task
-    .find()
+    .find({'author': req.user.id})
     .select('author title description timestamp _id')
     .populate('author', 'name username email')
     .exec()
@@ -41,9 +41,8 @@ router.get('/', (req, res, next) => {
 });
 
 router.post('/', (req, res, next) => {
-
     User
-    .findById(req.body.author)
+    .findById(req.user.id)
     .exec()
     .then(user => {
 
@@ -57,7 +56,7 @@ router.post('/', (req, res, next) => {
             _id: new mongoose.Types.ObjectId(),
             title: req.body.title,
             description: req.body.description,
-            author: req.body.author
+            author: req.user.id
         });  
         return task.save();
     })
@@ -76,12 +75,15 @@ router.post('/', (req, res, next) => {
                 }
             }
         });
+        // req.flash('success_msg', 'Created task successfully');
     })
     .catch(err => {
         res.status(500).json({
             error: err
         });
+        // req.flash('error_msg', 'Task not created');
     });
+    res.redirect('/tasks');
 });
 
 router.get('/:taskId', (req, res, next) =>{
