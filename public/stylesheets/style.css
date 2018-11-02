@@ -6,6 +6,9 @@ body{
 	background: #000;
 	margin-bottom: 30px !important;
 }
+.card{
+    color: #101010;
+}
 .footer{
 	position: fixed;
     left: 0;

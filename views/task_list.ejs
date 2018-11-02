@@ -4,12 +4,70 @@
     <title>Dashboard</title>
     <link rel="shortcut icon" href="/images/sampleimg.png" />
     <link rel="stylesheet" type="text/css" href="/stylesheets/style.css">
-    <link rel="stylesheet" type="text/css" href="/stylesheets/bootstrap.min.css">
+    <!-- <link rel="stylesheet" type="text/css" href="/stylesheets/bootstrap.min.css"> -->
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
 </head>
 <body>
     <%- include header.ejs %>
     <h1 class="text-center">Tasks</h1>
-    <p>Id: <%= auth_user._id %></p>
+    <div class="container">
+        <div class="card-columns" id="task-list">
+            
+        </div>
+    </div>
     <%- include footer.ejs %>
 </body>
+<script type="text/javascript">
+    console.log("hello");
+</script>
+<!-- <script type="text/javascript" href="/javascript/jquery.min.js"></script> -->
+<script src="https://code.jquery.com/jquery-3.3.1.min.js" integrity="sha256-FgpCb/KJQlLNfOu91ta32o/NMZxltwRo8QtmkMRdAu8=" crossorigin="anonymous"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js" integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q" crossorigin="anonymous"></script>
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js" integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl" crossorigin="anonymous"></script>
+
+<script type="text/javascript">
+
+    $(document).ready(function() {
+        var user_id = <%- JSON.stringify(auth_user['_id']) %>;
+
+        function create_task_card(title, description, timestamp){
+            return `<div class="card">
+                        <div class="card-body">
+                            <h5 class="card-title"> ${title} </h5>
+                            <p class="card-text"> 
+                                ${description}
+                            </p>
+                            <p class="card-text"><small class="text-muted">Last updated: ${timestamp}</small>
+                            </p>
+                        </div>
+                    </div>`
+        }
+
+        let task_list = [];
+        $.ajax({
+            url     : '/api/tasks',
+            type    : 'GET',
+
+            success : function(data) {
+                console.log(data['tasks']);
+                data['tasks'].forEach(function(task){
+                    if(task['author']['_id'] == user_id){
+                        task_list.push(task);
+                    }
+                });
+            },
+            complete : function(data) {
+                let task_cards_string = "";
+                task_list.forEach(function(task) {
+                    task_cards_string += create_task_card(task.title, task.description, task.timestamp);
+                });
+                $('#task-list').append(task_cards_string);
+            },
+            error: function(err) {
+                console.log(err);
+            }
+        });
+
+    });
+</script>
 </html>
