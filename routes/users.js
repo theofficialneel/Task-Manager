@@ -58,6 +58,20 @@ router.post('/register', function(req, res, next) {
 	}
 });
 
+router.get('/all', function(req, res, next){
+	User
+    .find()
+    .exec()
+    .then(function(docs){
+        res.status(200).json(docs);
+    })
+    .catch(function(err){
+        res.status(500).json({
+            error: err
+        });
+    });
+});
+
 passport.use(new LocalStrategy(
 	function (username, password, done) {
 		User.getUserByUsername(username, function (err, user) {
