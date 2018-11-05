@@ -84,8 +84,71 @@
 <script src="/javascript/bootstrap.min.js"></script>
 <script type="text/javascript">
 
+
     $(document).ready(function() {
         var user_id = <%- JSON.stringify(auth_user['_id']) %>;
+
+        function create_task_card(id, title, description, timestamp, author){
+            // giving patch and delete options to the author
+            if (user_id == author['_id']){
+                return `<div class="card" id="${id}">
+                        <div class="card-body">
+                            <h5 class="card-title"> 
+                                ${title}
+                                <span class="float-right delete-task" data-toggle="tooltip" title="Delete Task">
+                                    <i class="material-icons">delete</i>
+                                </span> 
+                                <span class="float-right edit-task" data-toggle="tooltip" title="Edit Task">
+                                    <i class="material-icons" data-toggle="modal" data-target="#editTaskModal">create</i>
+                                </span>
+                            </h5>
+                            <p class="card-text"> 
+                                ${description}
+                            </p>
+                            <p class="card-text"><small class="text-muted">Last updated: ${timestamp}</small>
+                            </p>
+                        </div>
+                    </div>`
+            }else{
+                return `<div class="card">
+                        <div class="card-body">
+                            <h5 class="card-title text-center"> ${title}</h5>
+                            <p class="card-text"> 
+                                ${description}
+                            </p>
+                            <p class="card-text"><small class="text-muted">Last updated: ${timestamp}</small>
+                            </p>
+                        </div>
+                    </div>`
+            }
+        }
+
+        function display_tasks() {
+            let task_list = [];
+            $.ajax({
+                url     : '/api/tasks',
+                type    : 'GET',
+
+                success : function(data) {
+                    data['tasks'].forEach(function(task){
+                        if(task['author']['_id'] == user_id){
+                            task_list.push(task);
+                        }
+                    });
+                },
+                complete : function(data) {
+                    console.log(task_list);
+                    let task_cards_string = "";
+                    task_list.forEach(function(task) {
+                        task_cards_string += create_task_card(task._id, task.title, task.description, task.timestamp, task.author);
+                    });
+                    $('#task-list').append(task_cards_string);
+                },
+                error: function(err) {
+                    console.log(err);
+                }
+            });
+        }
         
         $(document).on('click', '.delete-task', function () {
             var confirmation = confirm("Are you sure you want to delete the task?");
@@ -100,8 +163,9 @@
 
                     success: function(data,status){
                         console.log(data);
-                        alert(data['message']);
-                        window.location.reload(true);
+                        // alert(data['message']);
+                        $('#task-list').empty();
+                        display_tasks();
                     },
                     error: function(err, status){
                         console.log("Status: " + status + "\n Error: " + err);
@@ -159,12 +223,13 @@
 
                 success: function(data, status) {
                     console.log(status);
-                    alert(data['message']);
+                    // alert(data['message']);
                     $('#editTaskModalClose')[0].click();
                     form.attr('action', '');
                     form.find("input[name=title]").val('');
                     form.find("textarea[name=description]").val('');
-                    window.location.reload(true);
+                    $('#task-list').empty();
+                    display_tasks();
                 },
                 error: function(err, status) {
                     console.log(status);
@@ -173,66 +238,7 @@
             });
         });
 
-        function create_task_card(id, title, description, timestamp, author){
-            // giving patch and delete options to the author
-            if (user_id == author['_id']){
-                return `<div class="card" id="${id}">
-                        <div class="card-body">
-                            <h5 class="card-title"> 
-                                ${title}
-                                <span class="float-right delete-task" data-toggle="tooltip" title="Delete Task">
-                                    <i class="material-icons">delete</i>
-                                </span> 
-                                <span class="float-right edit-task" data-toggle="tooltip" title="Edit Task">
-                                    <i class="material-icons" data-toggle="modal" data-target="#editTaskModal">create</i>
-                                </span>
-                            </h5>
-                            <p class="card-text"> 
-                                ${description}
-                            </p>
-                            <p class="card-text"><small class="text-muted">Last updated: ${timestamp}</small>
-                            </p>
-                        </div>
-                    </div>`
-            }else{
-                return `<div class="card">
-                        <div class="card-body">
-                            <h5 class="card-title text-center"> ${title}</h5>
-                            <p class="card-text"> 
-                                ${description}
-                            </p>
-                            <p class="card-text"><small class="text-muted">Last updated: ${timestamp}</small>
-                            </p>
-                        </div>
-                    </div>`
-            }
-        }
-
-        let task_list = [];
-        $.ajax({
-            url     : '/api/tasks',
-            type    : 'GET',
-
-            success : function(data) {
-                data['tasks'].forEach(function(task){
-                    if(task['author']['_id'] == user_id){
-                        task_list.push(task);
-                    }
-                });
-            },
-            complete : function(data) {
-                console.log(task_list);
-                let task_cards_string = "";
-                task_list.forEach(function(task) {
-                    task_cards_string += create_task_card(task._id, task.title, task.description, task.timestamp, task.author);
-                });
-                $('#task-list').append(task_cards_string);
-            },
-            error: function(err) {
-                console.log(err);
-            }
-        });
-
+        display_tasks();
     });
 </script>
 </html>

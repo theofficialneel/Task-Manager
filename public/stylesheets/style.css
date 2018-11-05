@@ -15,15 +15,26 @@ body{
 	margin-bottom: 40px;
 	padding: 0;
 }
-#createTaskModal, #editTaskModal div{
+#createTaskModal div{
 	color: black;
 	border-radius: 15px;
 	background: #ccc;
 }
-.edit-task, .delete-task i {
-    cursor: pointer;
+#editTaskModal div {
+    color: black;
+    border-radius: 15px;
+    background: #ccc;
 }
-
+.edit-task i {
+    cursor: pointer;
+    font-size: 0.8em;
+    color: #aaa;
+}
+.delete-task i {
+    cursor: pointer;
+    font-size: 0.8em;
+    color: #aaa;
+}
 .card{
     color: #ddd;
     background-color: #333 !important;
