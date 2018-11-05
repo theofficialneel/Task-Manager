@@ -20,7 +20,7 @@ body{
 	border-radius: 15px;
 	background: #ccc;
 }
-.edit-task i {
+.edit-task, .delete-task i {
     cursor: pointer;
 }
 
