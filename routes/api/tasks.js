@@ -100,7 +100,7 @@ router.get('/:taskId', (req, res, next) =>{
                 request: {
                     type: 'GET',
                     description: 'Get all task data',
-                    url: req.protocol + '://' + req.get('host') + 'api/tasks/'
+                    url: req.protocol + '://' + req.get('host') + '/api/tasks/'
                 }
             });
         }else{
@@ -142,7 +142,7 @@ router.patch('/:taskId', (req, res, next) =>{
     })
     .catch(err => {
         res.status(500).json({
-            error: err
+            message: err
         });
     });
 });

@@ -3,7 +3,6 @@ var router = express.Router();
 
 /* GET home page. */
 router.get('/', ensureAuth, function(req, res, next) {
-    console.log(req.user);
     res.render('task_list', {auth_user: req.user});
 });
 

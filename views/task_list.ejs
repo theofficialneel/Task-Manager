@@ -50,6 +50,34 @@
       </div>
     </div>
 
+    <div class="modal fade" id="editTaskModal" tabindex="-1">
+      <div class="modal-dialog" role="document">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h3 class="modal-title text-center">Edit Task</h3>
+            <button id="editTaskModalClose" type="button" class="close" data-dismiss="modal" aria-label="Close">
+              <span aria-hidden="true">&times;</span>
+            </button>
+          </div>
+          <div class="modal-body">
+            <form>
+                <div class="form-group">
+                    <label>Title</label>
+                    <input type="text" class="form-control" placeholder="Title" name="title">
+                </div>
+                <div class="form-group">
+                    <label>Description</label>
+                    <textarea class="form-control" rows="4" placeholder="Write Task Here.." name="description"></textarea>
+                </div>
+                <div class="text-center">
+                    <button type="submit" id="edit-task-btn" class="btn btn-primary">Submit</button>
+                </div>
+            </form>
+          </div>
+        </div>
+      </div>
+    </div>
+
     <%- include footer.ejs %>
 </body>
 <script src="/javascript/jquery.min.js"></script>
@@ -58,11 +86,82 @@
 
     $(document).ready(function() {
         var user_id = <%- JSON.stringify(auth_user['_id']) %>;
+        
+        
+        $(document).on('click', '.edit-task', function () {
+            var taskId = $(this).closest('.card').attr('id');
+            console.log(taskId);
 
-        function create_task_card(title, description, timestamp){
-            return `<div class="card">
+            $.ajax({
+                url: '/api/tasks/' + taskId,
+                method: 'GET',
+                dataType: 'json',
+
+                success: function(data,status){
+                    console.log(data);
+                    var form = $('#editTaskModal').find("form");
+                    form.attr('action', '/api/tasks/' + data['task']['_id']);
+                    form.find("input[name=title]").val(data['task']['title']);
+                    form.find("textarea[name=description]").val(data['task']['description']);
+                },
+                error: function(err, status){
+                    console.log("Status: " + status + "\n Error: " + err);
+                }
+            });
+        });
+        
+        $(document).on('click', '#edit-task-btn', function(e) {
+            e.preventDefault();
+            var form = $(editTaskModal).find("form");
+            var action = form.attr('action');
+            var title = form.find("input[name=title]").val();
+            var description = form.find("textarea[name=description]").val();
+            var updateData = [
+                {
+                    propName: 'title',
+                    value:  title
+                },
+                {
+                    propName: 'description',
+                    value:  description
+                }
+            ];
+
+            $.ajax({
+                url: action,
+                method: 'PATCH',
+                contentType: 'application/json',
+                dataType: 'json',
+
+                data : JSON.stringify(updateData),
+
+                success: function(data, status) {
+                    console.log(status);
+                    alert(data['message']);
+                    $('#editTaskModalClose')[0].click();
+                    form.attr('action', '');
+                    form.find("input[name=title]").val('');
+                    form.find("textarea[name=description]").val('');
+                    window.location.reload(true);
+                },
+                error: function(err, status) {
+                    console.log(status);
+                    alert(err);
+                }
+            });
+        });
+
+        function create_task_card(id, title, description, timestamp, author){
+            // giving patch and delete options to the author
+            if (user_id == author['_id']){
+                return `<div class="card" id="${id}">
                         <div class="card-body">
-                            <h5 class="card-title"> ${title} </h5>
+                            <h5 class="card-title"> 
+                                ${title} 
+                                <span class="float-right edit-task">
+                                    <i class="material-icons" data-toggle="modal" data-target="#editTaskModal">create</i>
+                                </span>
+                            </h5>
                             <p class="card-text"> 
                                 ${description}
                             </p>
@@ -70,6 +169,18 @@
                             </p>
                         </div>
                     </div>`
+            }else{
+                return `<div class="card">
+                        <div class="card-body">
+                            <h5 class="card-title text-center"> ${title}</h5>
+                            <p class="card-text"> 
+                                ${description}
+                            </p>
+                            <p class="card-text"><small class="text-muted">Last updated: ${timestamp}</small>
+                            </p>
+                        </div>
+                    </div>`
+            }
         }
 
         let task_list = [];
@@ -78,7 +189,6 @@
             type    : 'GET',
 
             success : function(data) {
-                console.log(data['tasks']);
                 data['tasks'].forEach(function(task){
                     if(task['author']['_id'] == user_id){
                         task_list.push(task);
@@ -86,9 +196,10 @@
                 });
             },
             complete : function(data) {
+                console.log(task_list);
                 let task_cards_string = "";
                 task_list.forEach(function(task) {
-                    task_cards_string += create_task_card(task.title, task.description, task.timestamp);
+                    task_cards_string += create_task_card(task._id, task.title, task.description, task.timestamp, task.author);
                 });
                 $('#task-list').append(task_cards_string);
             },
