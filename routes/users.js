@@ -100,4 +100,56 @@ router.get('/logout', function (req, res) {
 	res.redirect('/users/login');
 });
 
+router.patch('/change/username', (req, res, next) => {
+    const id = req.user.id;
+    const updateOps = {};
+
+    updateOps.username = req.body.username1;
+
+    User
+    .updateOne({_id: id}, {$set: updateOps})
+    .exec()
+    .then(result => {
+        res.status(200).json({
+            message: "Username updated",
+            request: {
+                type: 'PATCH',
+                url: req.protocol + '://' + req.get('host') + '/users/change/username/'
+            }
+        });
+    })
+    .catch(err => {
+        res.status(500).json({
+            message: err
+        });
+    });
+});
+
+router.patch('/change/password', (req, res, next) => {
+    if (req.body.password != req.body.password2) {
+		res.render('error');
+	} else {
+		User.changePassword(req.body.password, function (err,hash) {
+			if (err) throw err;
+			User
+    		.updateOne({_id: req.user.id}, {$set: {password: hash}})
+    		.exec()
+		    .then(result => {
+		        res.status(200).json({
+		            message: "Password updated",
+		            request: {
+		                type: 'PATCH',
+		                url: req.protocol + '://' + req.get('host') + '/users/change/password/'
+		            }
+		        });
+		    })
+		    .catch(err => {
+		        res.status(500).json({
+		            message: err
+		        });
+		    });
+		});
+	}
+});
+
 module.exports = router;

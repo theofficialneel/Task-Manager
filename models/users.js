@@ -44,3 +44,11 @@ module.exports.comparePassword = function(candidatePassword, hash, callback){
     	callback(null, isMatch);
 	});
 }
+
+module.exports.changePassword = function(pass, callback){
+	bcrypt.genSalt(10, function(err, salt) {
+	    bcrypt.hash(pass, salt, function(err, hash) {
+	        callback(null,hash);
+	    });
+	});
+}

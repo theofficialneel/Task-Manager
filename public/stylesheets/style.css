@@ -53,6 +53,11 @@ body{
 	font-size: 30px !important;
 	color: #4cabce !important;
 }
+.profileBlank{
+    display: block;
+    margin: 0 auto;
+    padding-bottom: 5px; 
+}
 .userDetails{
 	margin-top: 50px;
 	font-size: 20px;

@@ -10,12 +10,120 @@
 </head>
 <body>
 	<%- include header.ejs %>
-	<h2 class="text-center useFredoka">Welcome, <%= User.name %></h2>
+	<img class="profileBlank" src="/images/profile_blank.png" width="150">
+	<h3 class="text-center useFredoka">Welcome, <%= User.name %></h3>
 	<div class="text-center userDetails useFredoka">
 		<p>Name : <%= User.name %></p>
 		<p>Username : <%= User.username %></p>
 		<p>Email : <%= User.email %></p>
+		<div data-toggle="modal" data-target="#changeUserModal" class="btn btn-primary">Change Username</div>
+		<div data-toggle="modal" data-target="#changePassModal" class="btn btn-primary">Change Password</div>
 	</div>
+
+	<div class="modal fade" id="changeUserModal" style="color:black;" tabindex="-1">
+    <div class="modal-dialog" role="document">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h3 class="modal-title text-center">Change Username</h3>
+          <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+          </button>
+        </div>
+        <div class="modal-body">
+          <form>
+              <div class="form-group">
+                  <label>New Username</label>
+                  <input type="text" class="form-control" placeholder="Username" name="username1">
+              </div>
+              <div class="text-center">
+                  <button id="user-form" type="submit" class="btn btn-primary">Change</button>
+              </div>
+          </form>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="modal fade" id="changePassModal" style="color:black;" tabindex="-1">
+    <div class="modal-dialog" role="document">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h3 class="modal-title text-center">Change Password</h3>
+          <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+          </button>
+        </div>
+        <div class="modal-body">
+          <form>
+              <div class="form-group">
+                  <label>New Password</label>
+                  <input type="text" class="form-control" placeholder="Password" name="password">
+              </div>
+              <div class="form-group">
+                  <label>Retype New Password</label>
+                  <input type="text" class="form-control" placeholder="Password" name="password2">
+              </div>
+              <div class="text-center">
+                  <button id="pass-form" type="submit" class="btn btn-primary">Change</button>
+              </div>
+          </form>
+        </div>
+      </div>
+    </div>
+  </div>
+
 	<%- include footer.ejs %>
 </body>
+<script src="/javascript/jquery.min.js"></script>
+<script src="/javascript/bootstrap.min.js"></script>
+<script type="text/javascript">
+	$(document).on('click', '#user-form', function (e) {
+    e.preventDefault();
+		var form = $('#changeUserModal').find("form");
+		var newUsername = form.find("input[name=username1]").val();
+		$.ajax({
+                url: '/users/change/username',
+                method: 'PATCH',
+                contentType: 'application/json',
+                dataType: 'json',
+
+                data: JSON.stringify({username1: newUsername}),
+
+                success: function(data, status) {
+                    console.log(status);
+                    $('#changeUserModal').modal('toggle');
+                    location.reload(); 
+                },
+                error: function(err, status) {
+                    console.log(status,err);
+                }
+            });
+	});
+  $(document).on('click', '#pass-form', function (e) {
+    e.preventDefault();
+    var form = $('#changePassModal').find("form");
+    var newPassword = form.find("input[name=password]").val();
+    var newPassword2 = form.find("input[name=password2]").val();
+    $.ajax({
+                url: '/users/change/password',
+                method: 'PATCH',
+                contentType: 'application/json',
+                dataType: 'json',
+
+                data: JSON.stringify({
+                  password: newPassword,
+                  password2: newPassword2
+                }),
+
+                success: function(data, status) {
+                    console.log(status);
+                    $('#changeUserModal').modal('toggle');
+                    document.location.href = '/users/login' 
+                },
+                error: function(err, status) {
+                    console.log(status,err);
+                }
+            });
+  });
+</script>
 </html>
